@@ -103,8 +103,8 @@ app.get("/tote-preview", async (req, res) => {
       artworkUrl,
       mockupUrl: TOTE_MOCKUP_URL,
       scale: 0.36,   // ~42 % der Taschenbreite
-      offsetX: 0.27, // leicht links
-      offsetY: 0.40, // etwas nach unten
+      offsetX: 0.29, // leicht links
+      offsetY: 0.41, // etwas nach unten
     });
 
     previewCache.set(cacheKey, finalBuffer);
