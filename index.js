@@ -102,9 +102,9 @@ app.get("/tote-preview", async (req, res) => {
     const finalBuffer = await placeArtworkOnMockup({
       artworkUrl,
       mockupUrl: TOTE_MOCKUP_URL,
-      scale: 0.40,   // ~42 % der Taschenbreite
-      offsetX: 0.26, // leicht links
-      offsetY: 0.38, // etwas nach unten
+      scale: 0.38,   // ~42 % der Taschenbreite
+      offsetX: 0.27, // leicht links
+      offsetY: 0.37, // etwas nach unten
     });
 
     previewCache.set(cacheKey, finalBuffer);
@@ -141,7 +141,7 @@ app.get("/mug-preview", async (req, res) => {
       mockupUrl: MUG_MOCKUP_URL,
       scale: 0.30,  // 25 % größer als 0.26
       offsetX: 0.35, // etwas nach rechts
-      offsetY: 0.36, // etwas nach unten
+      offsetY: 0.33, // etwas nach unten
     });
 
     previewCache.set(cacheKey, finalBuffer);
