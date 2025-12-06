@@ -49,7 +49,7 @@ async function placeArtworkOnMockup({ artworkUrl, mockupUrl, scale, offsetX, off
   const artPng = await sharp(artBuf)
     .ensureAlpha()
     .rotate(-90)   // <-- EINZIGE ÄNDERUNG
-    .png()
+    .jpeg({ quality: 90 })
     .toBuffer();
 
   // Mockup laden
@@ -76,7 +76,7 @@ async function placeArtworkOnMockup({ artworkUrl, mockupUrl, scale, offsetX, off
   // Artwork auf Mockup compositen
   const finalBuffer = await mockSharp
     .composite([{ input: scaledArt, left, top }])
-    .png()
+    .jpeg({ quality: 90 })
     .toBuffer();
 
   return finalBuffer;
