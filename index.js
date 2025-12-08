@@ -14,10 +14,10 @@ const SHOPIFY_FETCH_HEADERS = {
 
 // Mockup-URLs
 const TOTE_MOCKUP_URL =
-  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/Tragetasche_Mockup.jpg?v=1763713012";
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/IMG_1902.jpg?v=1765218360";
 
 const MUG_MOCKUP_URL =
-  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/front_Black_Tragetasche_mit_deinem_Design_mockup.png?v=1765215428";
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/IMG_1901.jpg?v=1765218358";
 
 // In-Memory Cache: key -> PNG Buffer
 const previewCache = new Map();
@@ -102,7 +102,7 @@ app.get("/tote-preview", async (req, res) => {
     const finalBuffer = await placeArtworkOnMockup({
       artworkUrl,
       mockupUrl: TOTE_MOCKUP_URL,
-      scale: 0.36,   // ~42 % der Taschenbreite
+      scale: 0.34,   // ~42 % der Taschenbreite
       offsetX: 0.29, // leicht links
       offsetY: 0.41, // etwas nach unten
     });
@@ -139,9 +139,9 @@ app.get("/mug-preview", async (req, res) => {
     const finalBuffer = await placeArtworkOnMockup({
       artworkUrl,
       mockupUrl: MUG_MOCKUP_URL,
-      scale: 0.36,  // 25 % größer als 0.26
-      offsetX: 0.29, // etwas nach rechts
-      offsetY: 0.41, // etwas nach unten
+      scale: 0.34,  // 25 % größer als 0.26
+      offsetX: 0.44, // etwas nach rechts
+      offsetY: 0.48, // etwas nach unten
     });
 
     previewCache.set(cacheKey, finalBuffer);
