@@ -17,7 +17,7 @@ const TOTE_MOCKUP_URL =
   "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/Tragetasche_Mockup.jpg?v=1763713012";
 
 const MUG_MOCKUP_URL =
-  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/IMG_1833.jpg?v=1764169061";
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/front_Black_Tragetasche_mit_deinem_Design_mockup.png?v=1765215428";
 
 // In-Memory Cache: key -> PNG Buffer
 const previewCache = new Map();
@@ -139,9 +139,9 @@ app.get("/mug-preview", async (req, res) => {
     const finalBuffer = await placeArtworkOnMockup({
       artworkUrl,
       mockupUrl: MUG_MOCKUP_URL,
-      scale: 0.30,  // 25 % größer als 0.26
-      offsetX: 0.36, // etwas nach rechts
-      offsetY: 0.305, // etwas nach unten
+      scale: 0.36,  // 25 % größer als 0.26
+      offsetX: 0.29, // etwas nach rechts
+      offsetY: 0.41, // etwas nach unten
     });
 
     previewCache.set(cacheKey, finalBuffer);
