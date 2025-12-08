@@ -139,9 +139,9 @@ app.get("/mug-preview", async (req, res) => {
     const finalBuffer = await placeArtworkOnMockup({
       artworkUrl,
       mockupUrl: MUG_MOCKUP_URL,
-      scale: 0.31,  // 25 % größer als 0.26
-      offsetX: 0.31, // etwas nach rechts
-      offsetY: 0.39, // etwas nach unten
+      scale: 0.30,
+      offsetX: 0.325,
+      offsetY: 0.39,
     });
 
     previewCache.set(cacheKey, finalBuffer);
