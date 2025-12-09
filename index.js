@@ -186,7 +186,7 @@ app.get("/tee-white-preview", async (req, res) => {
       // Werte so gewählt, dass Druck relativ zentriert auf der Brust liegt.
       scale: 0.36,
       offsetX: 0.32,
-      offsetY: 0.28,
+      offsetY: 0.27,
     });
 
     previewCache.set(cacheKey, finalBuffer);
@@ -224,7 +224,7 @@ app.get("/tee-black-preview", async (req, res) => {
       // gleiche Positionierung wie beim weißen Shirt
       scale: 0.36,
       offsetX: 0.32, // kleiner geht nach links
-      offsetY: 0.28, //kleiner geht nach oben
+      offsetY: 0.27, //kleiner geht nach oben
     });
 
     previewCache.set(cacheKey, finalBuffer);
