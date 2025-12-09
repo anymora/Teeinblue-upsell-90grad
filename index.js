@@ -19,6 +19,13 @@ const TOTE_MOCKUP_URL =
 const MUG_MOCKUP_URL =
   "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/IMG_1901.jpg?v=1765218358";
 
+// NEU: T-Shirt Mockups
+const TEE_WHITE_MOCKUP_URL =
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/front_White_T-Shirt_mit_deinem_Design_mockup.png?v=1765219659";
+
+const TEE_BLACK_MOCKUP_URL =
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/front_Black_T-Shirt_mit_deinem_Design_mockup.png?v=1765219659";
+
 // In-Memory Cache: key -> PNG Buffer
 const previewCache = new Map();
 
@@ -151,6 +158,82 @@ app.get("/mug-preview", async (req, res) => {
     console.error("Fehler in /mug-preview (NO BG):", err);
     res.status(500).json({
       error: "Interner Fehler in /mug-preview (NO BG)",
+      detail: err.message || String(err),
+    });
+  }
+});
+
+// --------------------------------------------------
+// NEU: /tee-white-preview – Artwork auf T-Shirt weiß
+// --------------------------------------------------
+app.get("/tee-white-preview", async (req, res) => {
+  const artworkUrl = req.query.url;
+
+  if (!artworkUrl || typeof artworkUrl !== "string") {
+    return res.status(400).json({ error: "Parameter 'url' fehlt oder ist ungültig." });
+  }
+
+  const cacheKey = "TEE_WHITE_" + artworkUrl;
+  if (previewCache.has(cacheKey)) {
+    res.setHeader("Content-Type", "image/png");
+    return res.send(previewCache.get(cacheKey));
+  }
+
+  try {
+    const finalBuffer = await placeArtworkOnMockup({
+      artworkUrl,
+      mockupUrl: TEE_WHITE_MOCKUP_URL,
+      // Werte so gewählt, dass Druck relativ zentriert auf der Brust liegt.
+      scale: 0.32,
+      offsetX: 0.42,
+      offsetY: 0.32,
+    });
+
+    previewCache.set(cacheKey, finalBuffer);
+    res.setHeader("Content-Type", "image/png");
+    res.send(finalBuffer);
+  } catch (err) {
+    console.error("Fehler in /tee-white-preview:", err);
+    res.status(500).json({
+      error: "Interner Fehler in /tee-white-preview",
+      detail: err.message || String(err),
+    });
+  }
+});
+
+// --------------------------------------------------
+// NEU: /tee-black-preview – Artwork auf T-Shirt schwarz
+// --------------------------------------------------
+app.get("/tee-black-preview", async (req, res) => {
+  const artworkUrl = req.query.url;
+
+  if (!artworkUrl || typeof artworkUrl !== "string") {
+    return res.status(400).json({ error: "Parameter 'url' fehlt oder ist ungültig." });
+  }
+
+  const cacheKey = "TEE_BLACK_" + artworkUrl;
+  if (previewCache.has(cacheKey)) {
+    res.setHeader("Content-Type", "image/png");
+    return res.send(previewCache.get(cacheKey));
+  }
+
+  try {
+    const finalBuffer = await placeArtworkOnMockup({
+      artworkUrl,
+      mockupUrl: TEE_BLACK_MOCKUP_URL,
+      // gleiche Positionierung wie beim weißen Shirt
+      scale: 0.32,
+      offsetX: 0.42,
+      offsetY: 0.32,
+    });
+
+    previewCache.set(cacheKey, finalBuffer);
+    res.setHeader("Content-Type", "image/png");
+    res.send(finalBuffer);
+  } catch (err) {
+    console.error("Fehler in /tee-black-preview:", err);
+    res.status(500).json({
+      error: "Interner Fehler in /tee-black-preview",
       detail: err.message || String(err),
     });
   }
