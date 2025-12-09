@@ -184,9 +184,9 @@ app.get("/tee-white-preview", async (req, res) => {
       artworkUrl,
       mockupUrl: TEE_WHITE_MOCKUP_URL,
       // Werte so gewählt, dass Druck relativ zentriert auf der Brust liegt.
-      scale: 0.34,
-      offsetX: 0.38,
-      offsetY: 0.32,
+      scale: 0.35,
+      offsetX: 0.36,
+      offsetY: 0.31,
     });
 
     previewCache.set(cacheKey, finalBuffer);
@@ -222,9 +222,9 @@ app.get("/tee-black-preview", async (req, res) => {
       artworkUrl,
       mockupUrl: TEE_BLACK_MOCKUP_URL,
       // gleiche Positionierung wie beim weißen Shirt
-      scale: 0.34,
-      offsetX: 0.38, // kleiner geht nach links
-      offsetY: 0.32, //kleiner geht nach oben
+      scale: 0.35,
+      offsetX: 0.36, // kleiner geht nach links
+      offsetY: 0.31, //kleiner geht nach oben
     });
 
     previewCache.set(cacheKey, finalBuffer);
