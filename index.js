@@ -21,10 +21,17 @@ const MUG_MOCKUP_URL =
 
 // NEU: T-Shirt Mockups
 const TEE_WHITE_MOCKUP_URL =
-  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/front_White_T-Shirt_mit_deinem_Design_mockup.png?v=1765219659";
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/IMG_1926.jpg?v=1765367168";
 
 const TEE_BLACK_MOCKUP_URL =
-  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/front_Black_T-Shirt_mit_deinem_Design_mockup.png?v=1765219659";
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/IMG_1924.jpg?v=1765367167";
+
+// NEU: Overlays für T-Shirts (PNG oben drauf)
+const TEE_WHITE_OVERLAY_URL =
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/ber_wei_e_Shirt.png?v=1765367191";
+
+const TEE_BLACK_OVERLAY_URL =
+  "https://cdn.shopify.com/s/files/1/0958/7346/6743/files/ber_schwarze_Shirt.png?v=1765367224";
 
 // In-Memory Cache: key -> PNG Buffer
 const previewCache = new Map();
@@ -47,8 +54,9 @@ async function loadImage(url) {
 
 // --------------------------------------------------
 // Artwork auf Mockup legen (ohne Hintergrundentfernung)
+// Optional: overlayUrl -> PNG wird ÜBER alles gelegt
 // --------------------------------------------------
-async function placeArtworkOnMockup({ artworkUrl, mockupUrl, scale, offsetX, offsetY }) {
+async function placeArtworkOnMockup({ artworkUrl, mockupUrl, scale, offsetX, offsetY, overlayUrl }) {
   // Artwork laden
   const artBuf = await loadImage(artworkUrl);
 
@@ -80,9 +88,28 @@ async function placeArtworkOnMockup({ artworkUrl, mockupUrl, scale, offsetX, off
   const left = Math.round(meta.width * offsetX);
   const top = Math.round(meta.height * offsetY);
 
-  // Artwork auf Mockup compositen
+  const composites = [
+    { input: scaledArt, left, top }
+  ];
+
+  // Falls Overlay gesetzt: PNG über alles legen
+  if (overlayUrl) {
+    const overlayBuf = await loadImage(overlayUrl);
+    const overlayPng = await sharp(overlayBuf)
+      .ensureAlpha()
+      .png()
+      .toBuffer();
+
+    composites.push({
+      input: overlayPng,
+      left: 0,
+      top: 0,
+    });
+  }
+
+  // Artwork (und ggf. Overlay) auf Mockup compositen
   const finalBuffer = await mockSharp
-    .composite([{ input: scaledArt, left, top }])
+    .composite(composites)
     .jpeg({ quality: 90 })
     .toBuffer();
 
@@ -112,6 +139,7 @@ app.get("/tote-preview", async (req, res) => {
       scale: 0.34,   // ~42 % der Taschenbreite
       offsetX: 0.295, // leicht links
       offsetY: 0.41, // etwas nach unten
+      overlayUrl: undefined, // keine zusätzliche Ebene
     });
 
     previewCache.set(cacheKey, finalBuffer);
@@ -149,6 +177,7 @@ app.get("/mug-preview", async (req, res) => {
       scale: 0.30,
       offsetX: 0.34,
       offsetY: 0.39,
+      overlayUrl: undefined, // keine zusätzliche Ebene
     });
 
     previewCache.set(cacheKey, finalBuffer);
@@ -164,7 +193,7 @@ app.get("/mug-preview", async (req, res) => {
 });
 
 // --------------------------------------------------
-// NEU: /tee-white-preview – Artwork auf T-Shirt weiß
+// NEU: /tee-white-preview – Artwork auf T-Shirt weiß + Overlay
 // --------------------------------------------------
 app.get("/tee-white-preview", async (req, res) => {
   const artworkUrl = req.query.url;
@@ -187,6 +216,7 @@ app.get("/tee-white-preview", async (req, res) => {
       scale: 0.36,
       offsetX: 0.32,
       offsetY: 0.27,
+      overlayUrl: TEE_WHITE_OVERLAY_URL,
     });
 
     previewCache.set(cacheKey, finalBuffer);
@@ -202,7 +232,7 @@ app.get("/tee-white-preview", async (req, res) => {
 });
 
 // --------------------------------------------------
-// NEU: /tee-black-preview – Artwork auf T-Shirt schwarz
+// NEU: /tee-black-preview – Artwork auf T-Shirt schwarz + Overlay
 // --------------------------------------------------
 app.get("/tee-black-preview", async (req, res) => {
   const artworkUrl = req.query.url;
@@ -224,7 +254,8 @@ app.get("/tee-black-preview", async (req, res) => {
       // gleiche Positionierung wie beim weißen Shirt
       scale: 0.36,
       offsetX: 0.32, // kleiner geht nach links
-      offsetY: 0.27, //kleiner geht nach oben
+      offsetY: 0.27, // kleiner geht nach oben
+      overlayUrl: TEE_BLACK_OVERLAY_URL,
     });
 
     previewCache.set(cacheKey, finalBuffer);
